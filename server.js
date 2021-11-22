@@ -19,29 +19,44 @@ app.get("/js", (req, res) => {
   res.sendFile(path.join(__dirname, "public/index.js"));
 });
 
+var Rollbar = require('rollbar')
+var rollbar = new Rollbar({
+  accessToken: 'b805279a4db2440aa89c3a436d1005e0',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+})
+
 app.get('/api/robots', (req, res) => {
     try {
+        rollbar.info('Someone clicked the "See All Bots" button')
+        if (botsArr.length = 0 || undefined) {
+            rollbar.warning('botsArr is empty!')
+        }
         res.status(200).send(botsArr)
     } catch (error) {
         console.log('ERROR GETTING BOTS', error)
+        rollbar.error(error)
         res.sendStatus(400)
     }
 })
 
 app.get('/api/robots/five', (req, res) => {
     try {
+        rollbar.info('Someone clicked the "Draw" button')
         let shuffled = shuffleArray(bots)
         let choices = shuffled.slice(0, 5)
         let compDuo = shuffled.slice(6, 8)
         res.status(200).send({choices, compDuo})
     } catch (error) {
         console.log('ERROR GETTING FIVE BOTS', error)
+        rollbar.error(error)
         res.sendStatus(400)
     }
 })
 
 app.post('/api/duel', (req, res) => {
     try {
+        rollbar.info('Someone clicked the "Duel" button')
         // getting the duos from the front end
         let {compDuo, playerDuo} = req.body
 
@@ -60,13 +75,16 @@ app.post('/api/duel', (req, res) => {
         // comparing the total health to determine a winner
         if (compHealthAfterAttack > playerHealthAfterAttack) {
             playerRecord.losses++
+            rollbar.info('Someone lost a duel')
             res.status(200).send('You lost!')
         } else {
             playerRecord.losses++
+            rollbar.info('someone won a match')
             res.status(200).send('You won!')
         }
     } catch (error) {
         console.log('ERROR DUELING', error)
+        rollbar.error(error)
         res.sendStatus(400)
     }
 })
@@ -76,6 +94,7 @@ app.get('/api/player', (req, res) => {
         res.status(200).send(playerRecord)
     } catch (error) {
         console.log('ERROR GETTING PLAYER STATS', error)
+        rollbar.error(error)
         res.sendStatus(400)
     }
 })
