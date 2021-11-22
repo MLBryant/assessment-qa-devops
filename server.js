@@ -29,9 +29,6 @@ var rollbar = new Rollbar({
 app.get('/api/robots', (req, res) => {
     try {
         rollbar.info('Someone clicked the "See All Bots" button')
-        if (botsArr.length = 0 || undefined) {
-            rollbar.warning('botsArr is empty!')
-        }
         res.status(200).send(botsArr)
     } catch (error) {
         console.log('ERROR GETTING BOTS', error)
