@@ -22,6 +22,7 @@ test('Title shows up when page loads', async () => {
 test('choices div displays after clicking Draw button', async () => {
     const draw = await driver.findElement(By.id('draw'))
     await draw.click()
+    await driver.sleep(100)
     const choices = await driver.findElement(By.id('choices'))
     const displayed = await choices.isDisplayed()
     expect(displayed).toBe(true)
@@ -30,8 +31,10 @@ test('choices div displays after clicking Draw button', async () => {
 test('clicking Add to Duo displays player-duo div', async () => {
     const draw = await driver.findElement(By.id('draw'))
     await draw.click()
+    await driver.sleep(100)
     const addBtn = await driver.findElement(By.className('bot-btn'))
     await addBtn.click()
+    await driver.sleep(100)
     const playerDuo = await driver.findElement(By.id('player-duo'))
     const displayed = await playerDuo.isDisplayed()
     expect(displayed).toBe(true)
